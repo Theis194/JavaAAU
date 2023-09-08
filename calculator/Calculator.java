@@ -7,6 +7,9 @@ import java.util.regex.*;
 public class Calculator {
     private static String[] knownOperators = {"+", "-", "*", "/"};
 
+    // Funny enum things
+    // Each enum is a function with a specified value
+    // You can then call 
     public enum OperatorSignificance {
         ADD(0),
         SUBTRACT(1),
@@ -21,6 +24,7 @@ public class Calculator {
         public int getValue() {return value; }
     }
 
+    // Main method handling the functionality of the calculator
     public static void main(String[] args) {
         LinkedList<Expression> numbers = new LinkedList<Expression>();
         LinkedList<String> operators = new LinkedList<String>();
@@ -44,6 +48,7 @@ public class Calculator {
         System.out.printf("Result: %.5f", result.evaluate());
     }
 
+    // Recursively builds an expression based on a list of numbers and operators
     public static Expression createExpression( LinkedList<Expression> numbers, LinkedList<String> operators, int index) {
         if (index == -1) {
             return numbers.get(0);
@@ -60,6 +65,7 @@ public class Calculator {
         return createExpression(numbers, operators, index);
     }
 
+    // Returns true if the given string is a number
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
@@ -72,6 +78,7 @@ public class Calculator {
         return true;
     }
 
+    // Returns true if the given character is one of the known operators
     public static boolean isOperator(String character) {
 
         if (character == null) {
@@ -85,6 +92,7 @@ public class Calculator {
         return false;
     }
 
+    // This method extracts all raw numbers from a text string
     private static LinkedList<Expression> getNumbers(String input) {
         LinkedList<Expression> result = new LinkedList<Expression>();
         if (input == null || input.isEmpty()) {
@@ -103,6 +111,7 @@ public class Calculator {
         return result;
     }
 
+    // This method extracts all operators from a given text string
     private static LinkedList<String> getOperator(String input) {
         LinkedList<String> result = new LinkedList<String>();
          if (input.length() == 0 || input == null) {
@@ -118,6 +127,7 @@ public class Calculator {
         return result;
     }
 
+    // Returns a numerical value representing the significance of the mathematical operator
     private static int getOperatorValue(String operator) {
         switch (operator) {
             case "+":
