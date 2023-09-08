@@ -1,5 +1,7 @@
 import java.util.*;
 import expression.*;
+import expression.Number;
+
 import java.util.regex.*;
 
 public class Calculator {
@@ -20,7 +22,7 @@ public class Calculator {
     }
 
     public static void main(String[] args) {
-        LinkedList<Double> numbers = new LinkedList<Double>();
+        LinkedList<Expression> numbers = new LinkedList<Expression>();
         LinkedList<String> operators = new LinkedList<String>();
 
         System.out.println("Type anything");
@@ -35,30 +37,27 @@ public class Calculator {
             System.out.printf("Invalid expression \"%s\"", text);
             return;
         }
-        
 
-        Double result = evaluateExpression(numbers, operators);
+        Expression result = createExpression(numbers, operators, getHighestSignificance(operators));
 
-        System.out.printf("Result: %f", result);
+        System.out.println("Result: ");
+        System.out.printf("Result: %.5f", result.evaluate());
     }
 
-    private static Double evaluateExpression(LinkedList<Double> numbers, LinkedList<String> operators) {
-        if (numbers.size() < 1) {
-            return -1.0;
-        } else if (numbers.size() == 1) {
+    public static Expression createExpression( LinkedList<Expression> numbers, LinkedList<String> operators, int index) {
+        if (index == -1) {
             return numbers.get(0);
         }
+        Calculation calc = new Calculation(numbers.get(index), numbers.get(index + 1), operators.get(index));
 
-        int hihestSignificance = getHighestSignificance(operators);
+        numbers.remove(index + 1);
+        numbers.remove(index);
+        operators.remove(index);
 
-        Expression expression = new Expression(numbers.get(hihestSignificance), numbers.get(hihestSignificance + 1), operators.get(hihestSignificance));
-        numbers.remove(hihestSignificance + 1);
-        numbers.remove(hihestSignificance);
-        operators.remove(hihestSignificance);
-        
-        numbers.add(hihestSignificance, expression.calculate());
+        numbers.add(index, calc);
 
-        return evaluateExpression(numbers, operators);
+        index = getHighestSignificance(operators);
+        return createExpression(numbers, operators, index);
     }
 
     public static boolean isNumeric(String strNum) {
@@ -86,19 +85,19 @@ public class Calculator {
         return false;
     }
 
-    private static LinkedList<Double> getNumbers(String input) {
-        LinkedList<Double> result = new LinkedList<Double>();
+    private static LinkedList<Expression> getNumbers(String input) {
+        LinkedList<Expression> result = new LinkedList<Expression>();
         if (input == null || input.isEmpty()) {
             return result;
         }
 
-        String regex = "[-+]?[0-9]*\\.?[0-9]+";
+        String regex = "[0-9]*\\.?[0-9]+";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
 
         while (matcher.find()) {
             String matchedNumber = matcher.group();
-            result.add(Double.parseDouble(matchedNumber));
+            result.add(new Number(Double.parseDouble(matchedNumber)));
         }
 
         return result;
