@@ -1,7 +1,6 @@
 {
     "java.project.sourcePaths": [
-        "test",
-        "test\\setupTest",
-        "Calculator"
+        "calculator",
+        "test"
     ]
 }
