@@ -7,27 +7,10 @@ import java.util.regex.*;
 public class Calculator {
     private static String[] knownOperators = {"+", "-", "*", "/"};
 
-    // Funny enum things
-    // Each enum is a function with a specified value
-    // You can then call 
-    public enum OperatorSignificance {
-        ADD(0),
-        SUBTRACT(1),
-        MULTIPLY(2),
-        DIVIDE(3);
-
-        private final int value;
-        OperatorSignificance(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {return value; }
-    }
-
     // Main method handling the functionality of the calculator
     public static void main(String[] args) {
         LinkedList<Expression> numbers = new LinkedList<Expression>();
-        LinkedList<String> operators = new LinkedList<String>();
+        LinkedList<Operator> operators = new LinkedList<Operator>();
 
         System.out.println("Type anything");
         Scanner scanner = new Scanner(System.in);
@@ -49,7 +32,7 @@ public class Calculator {
     }
 
     // Recursively builds an expression based on a list of numbers and operators
-    public static Expression createExpression( LinkedList<Expression> numbers, LinkedList<String> operators, int index) {
+    public static Expression createExpression( LinkedList<Expression> numbers, LinkedList<Operator> operators, int index) {
         if (index == -1) {
             return numbers.get(0);
         }
@@ -112,40 +95,29 @@ public class Calculator {
     }
 
     // This method extracts all operators from a given text string
-    private static LinkedList<String> getOperator(String input) {
-        LinkedList<String> result = new LinkedList<String>();
+    private static LinkedList<Operator> getOperator(String input) {
+        Boolean inParentheses = false;
+        LinkedList<Operator> result = new LinkedList<Operator>();
          if (input.length() == 0 || input == null) {
             return result;
         }
 
         String[] temp = input.split("");
         for (String string : temp) {
+            if (string.equals("(")) {
+                inParentheses = true;
+            } else if(string.equals(")")) {
+                inParentheses = false;
+            }
             if (isOperator(string)) {
-                result.add(string);
+                result.add(new Operator(string, inParentheses));
             }
         }
         return result;
     }
 
-    // Returns a numerical value representing the significance of the mathematical operator
-    private static int getOperatorValue(String operator) {
-        switch (operator) {
-            case "+":
-                return OperatorSignificance.ADD.getValue();
-            case "-":
-                return OperatorSignificance.SUBTRACT.getValue();
-            case "*":
-                return OperatorSignificance.MULTIPLY.getValue();
-            case "/":
-                return OperatorSignificance.DIVIDE.getValue();
-            default:
-                System.out.printf("Operator: \"%s\" not supported", operator);
-                return -1;
-        }
-    }
-
     // Returns index of the highest significance
-    private static  int getHighestSignificance( LinkedList<String> operators) {
+    private static  int getHighestSignificance( LinkedList<Operator> operators) {
         if(operators.size() < 1) {
             return -1;
         }
@@ -157,7 +129,7 @@ public class Calculator {
         int highestSignificance = -1;
         int highestSignificanceIndex = -1;
         for (int i = 0; i < operators.size(); i++) {
-            int operatorValue = getOperatorValue(operators.get(i));
+            int operatorValue = operators.get(i).significance;
             if (operatorValue > highestSignificance) {
                 highestSignificance = operatorValue;
                 highestSignificanceIndex = i;
