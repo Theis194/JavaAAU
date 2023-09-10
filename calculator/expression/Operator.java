@@ -16,7 +16,8 @@ public class Operator extends Expression {
         ADD(0),
         SUBTRACT(1),
         MULTIPLY(2),
-        DIVIDE(3);
+        DIVIDE(3),
+        POWER(4);
 
         private final int value;
         OperatorSignificance(final int newValue) {
@@ -42,6 +43,9 @@ public class Operator extends Expression {
                 break;
             case "/":
                 significanceValue = OperatorSignificance.DIVIDE.getValue();
+                break;
+            case "^":
+                significanceValue = OperatorSignificance.POWER.getValue();
                 break;
             default:
                 System.out.printf("Operator: \"%s\" not supported", operator);

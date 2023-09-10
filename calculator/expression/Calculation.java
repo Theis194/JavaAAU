@@ -1,4 +1,5 @@
 package expression;
+import java.math.*;
 
 public class Calculation extends Expression {
     public Expression a;
@@ -74,6 +75,11 @@ public class Calculation extends Expression {
                     return 0.0;
                 }
                 return this.aVal / this.bVal;
+            case "^":
+                if (this.aVal == 0 || this.bVal == 0) {
+                    return 0.0;
+                }
+                return Math.pow(this.aVal, this.bVal);
             default:
                 System.out.printf("Operator: \"%s\" not supported", operator);
                 break;

@@ -5,30 +5,39 @@ import expression.Number;
 import java.util.regex.*;
 
 public class Calculator {
-    private static String[] knownOperators = {"+", "-", "*", "/"};
+    private static String[] knownOperators = {"+", "-", "*", "/", "^"};
+    public static Scanner scanner = new Scanner(System.in);
 
     // Main method handling the functionality of the calculator
     public static void main(String[] args) {
-        LinkedList<Expression> numbers = new LinkedList<Expression>();
-        LinkedList<Operator> operators = new LinkedList<Operator>();
-
-        System.out.println("Type anything");
-        Scanner scanner = new Scanner(System.in);
-
-        String text = scanner.nextLine();
-        scanner.close();
-
-        numbers = getNumbers(text);
-        operators = getOperator(text);
-        if (numbers.size() < 2 && operators.size() < 1 && numbers.size() != operators.size() + 1) {
-            System.out.printf("Invalid expression \"%s\"", text);
-            return;
+        while (true) {
+            LinkedList<Expression> numbers = new LinkedList<Expression>();
+            LinkedList<Operator> operators = new LinkedList<Operator>();
+    
+            String text = getInput();
+            if (text.equals("q")) {
+                break;
+            }
+    
+            numbers = getNumbers(text);
+            operators = getOperator(text);
+            if (numbers.size() < 2 || operators.size() < 1 || numbers.size() != operators.size() + 1) {
+                System.out.printf("Invalid expression \"%s\"", text);
+                continue;
+            }
+    
+            Expression result = createExpression(numbers, operators, getHighestSignificance(operators));
+    
+            System.out.println("Result: ");
+            System.out.printf("Result: %.5f \n", result.evaluate());
         }
+        scanner.close();
+    }
 
-        Expression result = createExpression(numbers, operators, getHighestSignificance(operators));
-
-        System.out.println("Result: ");
-        System.out.printf("Result: %.5f", result.evaluate());
+    // Waits for input from the console
+    private static String getInput() {
+        System.out.println("Input Equation");
+        return scanner.nextLine();
     }
 
     // Recursively builds an expression based on a list of numbers and operators
@@ -90,7 +99,6 @@ public class Calculator {
             String matchedNumber = matcher.group();
             result.add(new Number(Double.parseDouble(matchedNumber)));
         }
-
         return result;
     }
 
