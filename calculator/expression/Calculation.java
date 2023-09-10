@@ -50,13 +50,31 @@ public class Calculation extends Expression {
         this.bVal = B.value;
     }
 
+    public Calculation(Expression A,  Operator Operator) {
+        this.a = A;
+        this.operator = Operator;
+        this.aVal = A.value;
+    }
+
+    public Calculation(Number A, Operator Operator) {
+        this.a = A;
+        this.operator = Operator;
+        this.aVal = A.value;
+    }
+
+    public Calculation(Calculation A, Operator Operator) {
+        this.a = A;
+        this.operator = Operator;
+        this.aVal = A.evaluate();
+    }
+
     @Override public Double evaluate() {
         Double result = 0.0;
 
         if (aVal == null) {
             this.aVal = this.a.evaluate();
         }
-        if (bVal == null) {
+        if (bVal == null && !this.operator.operator.equals("sqrt")) {
             this.bVal = this.b.evaluate();
         }
 
@@ -80,6 +98,11 @@ public class Calculation extends Expression {
                     return 0.0;
                 }
                 return Math.pow(this.aVal, this.bVal);
+            case "sqrt":
+                if (this.aVal == 0) {
+                    return 0.0;
+                }
+                return Math.sqrt(this.aVal);
             default:
                 System.out.printf("Operator: \"%s\" not supported", operator);
                 break;

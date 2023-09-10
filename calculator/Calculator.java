@@ -1,11 +1,10 @@
 import java.util.*;
 import expression.*;
 import expression.Number;
-
 import java.util.regex.*;
 
 public class Calculator {
-    private static String[] knownOperators = {"+", "-", "*", "/", "^"};
+    private static String[] knownOperators = {"+", "-", "*", "/", "^", "sqrt"};
     public static Scanner scanner = new Scanner(System.in);
 
     // Main method handling the functionality of the calculator
@@ -21,7 +20,7 @@ public class Calculator {
     
             numbers = getNumbers(text);
             operators = getOperator(text);
-            if (numbers.size() < 2 || operators.size() < 1 || numbers.size() != operators.size() + 1) {
+            if (numbers.size() < 1 || operators.size() < 1) {
                 System.out.printf("Invalid expression \"%s\"", text);
                 continue;
             }
@@ -45,11 +44,18 @@ public class Calculator {
         if (index == -1) {
             return numbers.get(0);
         }
-        Calculation calc = new Calculation(numbers.get(index), numbers.get(index + 1), operators.get(index));
 
-        numbers.remove(index + 1);
-        numbers.remove(index);
-        operators.remove(index);
+        Calculation calc;
+        if (operators.get(index).operator.equals("sqrt")) {
+            calc = new Calculation(numbers.get(index), operators.get(index));
+            numbers.remove(index);
+            operators.remove(index);
+        } else {
+            calc = new Calculation(numbers.get(index), numbers.get(index + 1), operators.get(index));
+            numbers.remove(index + 1);
+            numbers.remove(index);
+            operators.remove(index);
+        }
 
         numbers.add(index, calc);
 
@@ -110,12 +116,23 @@ public class Calculator {
             return result;
         }
 
-        String[] temp = input.split("");
+        LinkedList<String> temp = new LinkedList<String>();
+
+        // Using a regex pattern to split the input string into (+,-,*,/,sqrt(),(,)) and numbers
+        Pattern pattern = Pattern.compile("sqrt\\([^)]+\\)|[+*/^-]|\\d+");
+        Matcher matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
+            temp.add(matcher.group());
+        }
+
         for (String string : temp) {
             if (string.equals("(")) {
                 inParentheses = true;
-            } else if(string.equals(")")) {
+            } else if (string.equals(")")) {
                 inParentheses = false;
+            } else if (string.contains("sqrt(")) {
+                string = string.split("\\(")[0];
             }
             if (isOperator(string)) {
                 result.add(new Operator(string, inParentheses));
@@ -128,10 +145,6 @@ public class Calculator {
     private static  int getHighestSignificance( LinkedList<Operator> operators) {
         if(operators.size() < 1) {
             return -1;
-        }
-        
-        if (operators.size() == 1) {
-            return 0;
         }
 
         int highestSignificance = -1;
