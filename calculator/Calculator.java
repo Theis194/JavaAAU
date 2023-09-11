@@ -110,7 +110,7 @@ public class Calculator {
 
     // This method extracts all operators from a given text string
     private static LinkedList<Operator> getOperator(String input) {
-        Boolean inParentheses = false;
+        int parentheses = 0;
         LinkedList<Operator> result = new LinkedList<Operator>();
          if (input.length() == 0 || input == null) {
             return result;
@@ -119,7 +119,7 @@ public class Calculator {
         LinkedList<String> temp = new LinkedList<String>();
 
         // Using a regex pattern to split the input string into (+,-,*,/,sqrt(),(,)) and numbers
-        Pattern pattern = Pattern.compile("sqrt\\([^)]+\\)|[+*/^-]|\\d+");
+        Pattern pattern = Pattern.compile("sqrt\\([^)]+\\)|[()+*/^-]|\\d+");
         Matcher matcher = pattern.matcher(input);
 
         while (matcher.find()) {
@@ -128,14 +128,14 @@ public class Calculator {
 
         for (String string : temp) {
             if (string.equals("(")) {
-                inParentheses = true;
+                parentheses++;
             } else if (string.equals(")")) {
-                inParentheses = false;
+                parentheses--;
             } else if (string.contains("sqrt(")) {
                 string = string.split("\\(")[0];
             }
             if (isOperator(string)) {
-                result.add(new Operator(string, inParentheses));
+                result.add(new Operator(string, parentheses));
             }
         }
         return result;

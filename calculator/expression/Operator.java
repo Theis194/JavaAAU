@@ -4,9 +4,9 @@ public class Operator extends Expression {
     public String operator;
     public int significance;
 
-    public Operator(String _operator, Boolean inParentheses) {
+    public Operator(String _operator, int parentheses) {
         this.operator = _operator;
-        this.significance = getOperatorValue(_operator, inParentheses);
+        this.significance = getOperatorValue(_operator, parentheses);
     }
 
     // Funny enum things
@@ -29,7 +29,7 @@ public class Operator extends Expression {
     }
 
     // Returns a numerical value representing the significance of the mathematical operator
-    private static int getOperatorValue(String operator, Boolean inParentheses) {
+    private static int getOperatorValue(String operator, int parentheses) {
         int parenthesesExtra = 10;
         int significanceValue = 0;
         switch (operator) {
@@ -56,9 +56,6 @@ public class Operator extends Expression {
                 significanceValue = -1;
                 break;
             }
-            if (inParentheses == true) {
-                significanceValue += parenthesesExtra;
-            }
-            return significanceValue;
+            return significanceValue + (parentheses * parenthesesExtra);
     }
 }
