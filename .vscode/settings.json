@@ -2,6 +2,7 @@
     "java.project.sourcePaths": [
         "calculator",
         "test",
-        "Lectures"
+        "Lectures",
+        "miniProjekt"
     ]
 }
