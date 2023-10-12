@@ -240,6 +240,28 @@ public class BookingSystem {
         }
     }
 
+    public static void reserveRoom() {
+        System.out.println("Choose room to reserve");
+
+        // Either i need to keep track of all groups created and choose from them,
+        // or i do as i do other places and  go through the courses to find the groups
+        System.out.println("Choose group for reservation");
+
+        System.out.println("When shall the reservation start? (8:00 to 17:00 (Timeslots of 30 minute increments))");
+        // Check if first time is within 8:00-16:30 such that you don't try and reserve 17:00 to 17:00.
+
+        System.out.println("When shall the reservation end? (8:00 to 17:00 (Timeslots of 30 minute increments))");
+        // Check that the given time is after the first time and within the reservation period.
+        
+        /* 
+        If any of the checks fail notify the user
+            out of range, 
+            to short period, 
+            wrong way around(9:00 - 8:00), 
+            if another group has already reserved the room)
+        */
+    }
+
     public static int menu() {
         System.out.print("\033[H\033[2J");  
         System.out.flush(); 
