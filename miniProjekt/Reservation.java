@@ -1,3 +1,4 @@
+
 public class Reservation {
     public Group group;
     public WeekDay weekDay;

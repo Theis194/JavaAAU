@@ -1,10 +1,11 @@
+
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.HashMap;
 
 public class Room {
     public static HashMap<Integer, HashMap<Integer, Reservation>> week = new HashMap<Integer, HashMap<Integer, Reservation>>();
-    public static Integer roomNumber;
+    public static String roomNumber;
 
     public static void setup() {
         week.put(0, new HashMap<Integer, Reservation>());
@@ -14,7 +15,7 @@ public class Room {
         week.put(4, new HashMap<Integer, Reservation>());
     }
 
-    public Room(Integer roomNum) {
+    public Room(String roomNum) {
         setup();
         roomNumber = roomNum;
     }
@@ -38,5 +39,10 @@ public class Room {
             day.put(start + i, reservation);
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return roomNumber;
     }
 }
